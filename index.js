@@ -87,6 +87,44 @@ server.post('/products', function (req, res, next) {
   })
 })
 
+// Update a product by their id
+server.put('/products/:id', function (req, res, next) {
+  console.log('POST /products params=>' + JSON.stringify(req.params));
+  console.log('POST /products body=>' + JSON.stringify(req.body));
+  
+
+  let newproduct = {
+    _id: req.body.id,
+    productname: req.body.productname, 
+    price: req.body.price,
+    quantity: req.body.price
+  }
+  
+  // Updating product with the persistence engine
+  productsSave.update(newproduct, function (error, product) {
+    // If there are any errors, pass them to next in the correct format
+    if (error) return next(new Error(JSON.stringify(error.errors)))
+
+    // Send a 200 OK response
+    res.send(200)
+  })
+})
+
+// Delete product with the given id
+server.del('/products', function (req, res, next) {
+  console.log('DELETE /products');
+  // Delete the product with the persistence engine
+  productsSave.deleteMany({}, function (error) {
+
+    // If there are any errors, pass them to next in the correct format
+    if (error) return next(new Error(JSON.stringify(error.errors)))
+
+    // Send a 204 response
+    res.send(204)
+  })
+})
+
+
 
 
 
