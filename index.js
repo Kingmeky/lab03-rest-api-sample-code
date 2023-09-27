@@ -26,5 +26,21 @@ let restify = require('restify')
 server.use(restify.plugins.fullResponse());
 server.use(restify.plugins.bodyParser());
 
+// Get all products in the system
+server.get('/products', function (req, res, next) {
+  console.log('GET /products');
+
+  // counter code
+  getCounter++;
+  console.log('GET:' + getCounter, 'POST' + postCounter);
+
+  // Find every entity within the given collection
+  productsSave.find({}, function (error, products) {
+
+    // Return all of the products in the system
+    res.send(products)
+  })
+})
+
 
 
