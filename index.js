@@ -42,5 +42,51 @@ server.get('/products', function (req, res, next) {
   })
 })
 
+// Get a single product by their product id
+server.get('/products/:id', function (req, res, next) {
+  console.log('GET /products/:id params=>' + JSON.stringify(req.params));
+
+  // Find a single product by their id within save
+  productsSave.findOne({ _id: req.params.id }, function (error, product) {
+
+    // If there are any errors, pass them to next in the correct format
+    if (error) return next(new Error(JSON.stringify(error.errors)))
+
+    if (product) {
+      // Send the product if no issues
+      res.send(product)
+    } else {
+      // Send 404 header if the product doesn't exist
+      res.send(404)
+    }
+  })
+})
+
+// Create a new product
+server.post('/products', function (req, res, next) {
+  console.log('POST /products params=>' + JSON.stringify(req.params));
+  console.log('POST /products body=>' + JSON.stringify(req.body));
+
+  let newproduct = {
+    productname: req.body.name, 
+    price: req.body.age,
+    quantity: req.body.quantity
+  }
+
+  // Creating product using persistence engine
+  productsSave.create( newproduct, function (error, product) {
+    // total count for post
+    postCounter++;
+    console.log('GET:' + getCounter, 'POST' + postCounter);
+
+    // If there are any errors, pass to the next
+    if (error) return next(new Error(JSON.stringify(error.errors)))
+
+    // Send the product if no issues
+    res.send(201, product)
+  })
+})
+
+
 
 
